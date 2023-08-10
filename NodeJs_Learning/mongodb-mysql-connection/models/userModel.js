@@ -5,5 +5,6 @@ const userSchema = new mongoose.Schema({
   email: String,
   age: Number,
 });
+const User = mongoose.model("products", userSchema);
 
-module.exports = mongoose.model("products", userSchema);
+module.exports = User;

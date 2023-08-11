@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
 
-const { MONGO_SERVER, MONGO_DATABASE } = process.env;
 mongoose
-  .connect(`mongodb://${MONGO_SERVER}/${MONGO_DATABASE}`)
+  .connect(`mongodb://${process.env.MONGO_SERVER}/${process.env.MONGO_DATABASE}`)
   .then(() => {
     console.log("Connected to Mongodb database");
   })

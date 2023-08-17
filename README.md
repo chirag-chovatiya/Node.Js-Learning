@@ -1,4 +1,4 @@
 # Node.Js-Learning
 
 - Topic : Node.Js Learning
-        - Crude Operation MongoDb And MySql Create and Read
+        - Mongodb crud getalldata, getbyid, createnewuser, updateuserbyid, deleteuserbyid

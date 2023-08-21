@@ -7,8 +7,8 @@ const getAllUser = async function () {
 };
 
 // CREATE NEW USER
-const createUser = async function (name, email, age) {
-  const newUser = new User({ name, email, age });
+const createUser = async function (name, email, age, password) {
+  const newUser = new User({ name, email, age, password });
   return newUser.save();
 };
 

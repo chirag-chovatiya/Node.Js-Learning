@@ -1,4 +1,5 @@
 const User = require("../models/userModel");
+const hashPassword = require("../models/userPassword");
 
 // GET ALL USER
 const getAllUser = async (req, res) => {
@@ -13,10 +14,12 @@ const getAllUser = async (req, res) => {
 // CREATE NEW USER
 const createUser = async (req, res) => {
   try {
-    const { name, email, age } = req.body;
-    const savedUser = await User.createUser(name, email, age);
+    const { name, email, age, password } = req.body;
+    const hashedPassword = await hashPassword(password);
+    const savedUser = await User.createUser(name, email, age, hashedPassword);
     res.status(201).json(savedUser);
   } catch (error) {
+    console.log(error);
     res.status(500).send(error);
   }
 };

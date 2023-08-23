@@ -30,10 +30,16 @@ const deleteUserById = async function (userId) {
   return deleteUser;
 };
 
+const getUserByEmail = async function (email) {
+  const findUser = User.findOne({ email });
+  return findUser;
+};
+
 module.exports = {
   getAllUser,
   createUser,
   getUserById,
   updateUserById,
   deleteUserById,
+  getUserByEmail,
 };

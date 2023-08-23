@@ -1,13 +1,25 @@
 const User = require("../models/userModel");
-const hashPassword = require("../models/userPassword");
+const { hashPassword } = require("../models/userPassword");
+const httpStatus = require("http-status");
 
-// GET ALL USER
 const getAllUser = async (req, res) => {
   try {
     const users = await User.getAllUser();
-    res.send(users);
+    if (!users || users.length === 0) {
+      return res
+        .status(httpStatus.NOT_FOUND)
+        .json({
+          statusCode: httpStatus.NOT_FOUND,
+          error: "Not found any user",
+        });
+    }
   } catch (error) {
-    res.status(500).send(error);
+    res
+      .status(httpStatus.INTERNAL_SERVER_ERROR)
+      .json({
+        statusCode: httpStatus.INTERNAL_SERVER_ERROR,
+        error: "Internal Server Error",
+      });
   }
 };
 
@@ -19,7 +31,6 @@ const createUser = async (req, res) => {
     const savedUser = await User.createUser(name, email, age, hashedPassword);
     res.status(201).json(savedUser);
   } catch (error) {
-    console.log(error);
     res.status(500).send(error);
   }
 };
@@ -37,6 +48,11 @@ const getUserById = async (req, res) => {
 // UPDATE USER BYID
 const updateUserById = async (req, res) => {
   try {
+    const { password } = req.body;
+    if (password) {
+      const hashedPassword = await hashPassword(password);
+      req.body.password = hashedPassword;
+    }
     const updatedUser = await User.updateUserById(req.params.userId, req.body);
     res.status(200).json(updatedUser);
   } catch (error) {

@@ -9,15 +9,17 @@ const getAllUser = async (req, res) => {
       return res
         .status(httpStatus.NOT_FOUND)
         .json({
-          statusCode: httpStatus.NOT_FOUND,
+          statusCode: `${httpStatus.NOT_FOUND}`,
           error: "Not found any user",
         });
+    } else {
+      res.send(users);
     }
   } catch (error) {
     res
       .status(httpStatus.INTERNAL_SERVER_ERROR)
       .json({
-        statusCode: httpStatus.INTERNAL_SERVER_ERROR,
+        statusCode: `${httpStatus.INTERNAL_SERVER_ERROR}`,
         error: "Internal Server Error",
       });
   }
@@ -27,11 +29,26 @@ const getAllUser = async (req, res) => {
 const createUser = async (req, res) => {
   try {
     const { name, email, age, password } = req.body;
+    if (!name || !email || !age || !password) {
+      return res
+        .status(httpStatus.BAD_REQUEST)
+        .json({
+          statusCode: `${httpStatus.BAD_REQUEST}`,
+          error: "Missing required fields",
+        });
+    }
     const hashedPassword = await hashPassword(password);
     const savedUser = await User.createUser(name, email, age, hashedPassword);
-    res.status(201).json(savedUser);
+    res
+      .status(httpStatus.CREATED)
+      .json({ message: "User Created Successfull", savedUser });
   } catch (error) {
-    res.status(500).send(error);
+    res
+      .status(httpStatus.INTERNAL_SERVER_ERROR)
+      .json({
+        statusCode: `${httpStatus.INTERNAL_SERVER_ERROR}`,
+        error: "Internal Server Error",
+      });
   }
 };
 
@@ -39,9 +56,20 @@ const createUser = async (req, res) => {
 const getUserById = async (req, res) => {
   try {
     const user = await User.getUserById(req.params.userId);
-    res.status(200).json(user);
+    res
+      .status(httpStatus.OK)
+      .json({
+        statusCode: `${httpStatus.OK}`,
+        message: "User Get By Id Success",
+        user,
+      });
   } catch (error) {
-    res.status(500).send(error);
+    res
+      .status(httpStatus.INTERNAL_SERVER_ERROR)
+      .json({
+        statusCode: `${httpStatus.INTERNAL_SERVER_ERROR}`,
+        error: "Internal Server Error",
+      });
   }
 };
 
@@ -54,9 +82,20 @@ const updateUserById = async (req, res) => {
       req.body.password = hashedPassword;
     }
     const updatedUser = await User.updateUserById(req.params.userId, req.body);
-    res.status(200).json(updatedUser);
+    res
+      .status(httpStatus.OK)
+      .json({
+        statusCode: `${httpStatus.OK}`,
+        message: "User Updated Successfull",
+        updatedUser,
+      });
   } catch (error) {
-    res.status(500).json({ error: "Failed to update user." });
+    res
+      .status(httpStatus.INTERNAL_SERVER_ERROR)
+      .json({
+        statusCode: `${httpStatus.INTERNAL_SERVER_ERROR}`,
+        error: "Internal Server Error",
+      });
   }
 };
 
@@ -65,12 +104,27 @@ const deleteUserById = async (req, res) => {
   try {
     const user = await User.deleteUserById(req.params.userId);
     if (user) {
-      res.status(200).json(user);
+      res
+        .status(httpStatus.OK)
+        .json({
+          statusCode: `${httpStatus.OK}`,
+          error: "Delete User Successfull",
+        });
     } else {
-      res.status(404).json("User not found.");
+      res
+        .status(httpStatus.NOT_FOUND)
+        .json({
+          statusCode: `${httpStatus.NOT_FOUND}`,
+          error: "Not found any user",
+        });
     }
   } catch (error) {
-    res.status(500).json("Failed to delete user.");
+    res
+      .status(httpStatus.INTERNAL_SERVER_ERROR)
+      .json({
+        statusCode: `${httpStatus.INTERNAL_SERVER_ERROR}`,
+        error: "Internal Server Error",
+      });
   }
 };
 

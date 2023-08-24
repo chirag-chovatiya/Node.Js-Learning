@@ -7,8 +7,8 @@ const getAllUser = async function () {
 };
 
 // CREATE NEW USER
-const createUser = async function (name, email, age) {
-  const newUser = new User({ name, email, age });
+const createUser = async function (name, email, age, password) {
+  const newUser = new User({ name, email, age, password });
   return newUser.save();
 };
 
@@ -30,10 +30,16 @@ const deleteUserById = async function (userId) {
   return deleteUser;
 };
 
+const getUserByEmail = async function (email) {
+  const findUser = User.findOne({ email });
+  return findUser;
+};
+
 module.exports = {
   getAllUser,
   createUser,
   getUserById,
   updateUserById,
   deleteUserById,
+  getUserByEmail,
 };

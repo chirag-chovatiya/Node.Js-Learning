@@ -1,13 +1,15 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const routes = require('./routes/userRoutes');
-const dotenv = require('dotenv');
+const routes = require("./routes/userRoutes");
+const connectToDb = require("./config/mongodb");
+const dotenv = require("dotenv");
 dotenv.config();
 
 app.use(express.json());
-app.use('/', routes);
+app.use(routes);
+connectToDb;
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

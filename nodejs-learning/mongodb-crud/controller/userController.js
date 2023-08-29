@@ -75,7 +75,62 @@ const createUser = async (req, res) => {
       statusCode: httpStatus.INTERNAL_SERVER_ERROR,
       message: "Unable to Register",
     });
+  const { name, email, password, password_confirmation, tc } = req.body;
+  const userExists = await User.getUserByEmail(email);
+  if (userExists) {
+    res
+      .status(httpStatus.CONFLICT)
+      .json({
+        statusCode: `${httpStatus.CONFLICT}`,
+        message: "Email already exists",
+      });
+  } else {
+    if (name && email && password && password_confirmation && tc) {
+      if (password === password_confirmation) {
+        try {
+          const hashedPassword = await hashPassword(password);
+          const savedUser = await User.createUser(
+            name,
+            email,
+            hashedPassword,
+            tc
+          );
+          const saved_user = await User.getUserByEmail(email);
+          const token = User.generateToken(saved_user);
+          res
+            .status(httpStatus.OK)
+            .json({
+              statusCode: `${httpStatus.OK}`,
+              message: "User create Success",
+              token: token,
+              savedUser: savedUser,
+            });
+        } catch (error) {
+          res
+            .status(httpStatus.INTERNAL_SERVER_ERROR)
+            .json({
+              statusCode: `${httpStatus.INTERNAL_SERVER_ERROR}`,
+              message: "Unable to Register",
+            });
+        }
+      } else {
+        res
+          .status(httpStatus.NOT_FOUND)
+          .json({
+            statusCode: `${httpStatus.NOT_FOUND}`,
+            message: "Password and Confirm Password doesn't match",
+          });
+      }
+    } else {
+      res
+        .status(httpStatus.NOT_FOUND)
+        .json({
+          statusCode: `${httpStatus.NOT_FOUND}`,
+          message: "All fields are required",
+        });
+    }
   }
+}
 };
 
 // GET USER BYID

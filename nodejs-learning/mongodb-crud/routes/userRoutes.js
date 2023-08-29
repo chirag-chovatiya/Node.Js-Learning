@@ -8,6 +8,7 @@ router.post(
   studentController.userValidator,
   studentController.createUser
 );
+router.post("/create", studentController.createUser);
 router.post("/login", loginController.loginUser);
 
 router.get("/", studentController.getAllUser);

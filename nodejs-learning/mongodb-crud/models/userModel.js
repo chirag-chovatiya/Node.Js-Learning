@@ -1,4 +1,5 @@
 const User = require("./userSchema");
+const jwt = require("jsonwebtoken");
 
 // GET ALL USER
 const getAllUser = async function () {
@@ -7,9 +8,19 @@ const getAllUser = async function () {
 };
 
 // CREATE NEW USER
-const createUser = async function (name, email, age, password) {
-  const newUser = new User({ name, email, age, password });
+const createUser = async function (name, email, password, tc) {
+  const newUser = new User({ name, email, password, tc });
   return newUser.save();
+};
+const getUserByEmail = async function (email) {
+  const findUser = User.findOne({ email: email });
+  return findUser;
+};
+const generateToken = function (user) {
+  const token = jwt.sign({ userID: user._id }, process.env.JWT_SECRET_KEY, {
+    expiresIn: process.env.JWT_EXPIRE,
+  });
+  return token;
 };
 
 // GET USER BY ID
@@ -30,11 +41,6 @@ const deleteUserById = async function (userId) {
   return deleteUser;
 };
 
-const getUserByEmail = async function (email) {
-  const findUser = User.findOne({ email });
-  return findUser;
-};
-
 module.exports = {
   getAllUser,
   createUser,
@@ -42,4 +48,5 @@ module.exports = {
   updateUserById,
   deleteUserById,
   getUserByEmail,
+  generateToken,
 };

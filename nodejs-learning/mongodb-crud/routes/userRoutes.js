@@ -3,6 +3,11 @@ const router = express.Router();
 const studentController = require("../controller/userController");
 const loginController = require("../controller/loginController");
 
+router.post(
+  "/create",
+  studentController.userValidator,
+  studentController.createUser
+);
 router.post("/create", studentController.createUser);
 router.post("/login", loginController.loginUser);
 

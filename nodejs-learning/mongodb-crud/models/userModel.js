@@ -22,10 +22,14 @@ const generateToken = function (user) {
   });
   return token;
 };
+const verifyToken = function (token) {
+  const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
+  return decodedToken.userID;
+};
 
 // GET USER BY ID
 const getUserById = async function (userId) {
-  const findById = User.findById(userId);
+  const findById = User.findById(userId).select("-password");
   return findById;
 };
 
@@ -49,4 +53,5 @@ module.exports = {
   deleteUserById,
   getUserByEmail,
   generateToken,
+  verifyToken,
 };

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const studentController = require("../controller/userController");
 const loginController = require("../controller/register-login-Controller");
+const carDetail = require("../controller/carSpecification");
 const { checkUserAuth } = require("../middleware/authMiddleware");
 
 router.use("/logged", checkUserAuth);
@@ -17,6 +18,8 @@ router.post(
   loginController.loginUser
 );
 router.get("/logged", loginController.loggedUser);
+
+router.post("/carDetails", carDetail.carSpecification);
 
 router.get("/", studentController.getAllUser);
 router.get("/:userId", studentController.getUserById);

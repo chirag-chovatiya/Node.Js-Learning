@@ -1,4 +1,5 @@
 const User = require("./userSchema");
+const Car = require("./carSchema");
 const jwt = require("jsonwebtoken");
 
 // GET ALL USER
@@ -8,8 +9,8 @@ const getAllUser = async function () {
 };
 
 // CREATE NEW USER
-const createUser = async function (name, email, password, tc) {
-  const newUser = new User({ name, email, password, tc });
+const createUser = async function (name, email, password, dob, phone, tc) {
+  const newUser = new User({ name, email, password, dob, phone, tc });
   return newUser.save();
 };
 const getUserByEmail = async function (email) {
@@ -25,6 +26,50 @@ const generateToken = function (user) {
 const verifyToken = function (token) {
   const decodedToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
   return decodedToken.userID;
+};
+
+// CAR SPECIFICATION CREATE
+const carCreate = async function (
+  model,
+  modelName,
+  bodyType,
+  engine,
+  engineType,
+  engineCylinders,
+  manufacturingYear,
+  seatingCapacity,
+  mileage,
+  fuelType,
+  fuelTankCapacity,
+  transmission,
+  kilometer,
+  drivetrain,
+  safety,
+  exShowroomPrice,
+  insurance,
+  onRoadPrice
+) {
+  const newCar = new Car({
+    model,
+    modelName,
+    bodyType,
+    engine,
+    engineType,
+    engineCylinders,
+    manufacturingYear,
+    seatingCapacity,
+    mileage,
+    fuelType,
+    fuelTankCapacity,
+    transmission,
+    kilometer,
+    drivetrain,
+    safety,
+    exShowroomPrice,
+    insurance,
+    onRoadPrice,
+  });
+  return newCar.save();
 };
 
 // GET USER BY ID
@@ -54,4 +99,5 @@ module.exports = {
   getUserByEmail,
   generateToken,
   verifyToken,
+  carCreate,
 };

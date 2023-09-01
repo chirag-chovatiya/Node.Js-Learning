@@ -9,6 +9,8 @@ const userValidator = (req, res, next) => {
     name: Joi.string().required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(6).max(10).required(),
+    dob: Joi.string().required(),
+    phone: Joi.number().min(10).required(),
     password_confirmation: Joi.valid(Joi.ref("password")).required(),
     tc: Joi.boolean().required(),
   });
@@ -24,7 +26,8 @@ const userValidator = (req, res, next) => {
 };
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password, password_confirmation, tc } = req.body;
+    const { name, email, password, dob, phone, password_confirmation, tc } =
+      req.body;
     const userExists = await User.getUserByEmail(email);
     if (userExists) {
       return res.status(httpStatus.CONFLICT).json({
@@ -38,8 +41,16 @@ const registerUser = async (req, res) => {
         message: "Password and Confirm Password must match",
       });
     }
+
     const hashedPassword = await hashPassword(password);
-    const savedUser = await User.createUser(name, email, hashedPassword, tc);
+    const savedUser = await User.createUser(
+      name,
+      email,
+      hashedPassword,
+      dob,
+      phone,
+      tc
+    );
     const saved_user = await User.getUserByEmail(email);
     const token = User.generateToken(saved_user);
 

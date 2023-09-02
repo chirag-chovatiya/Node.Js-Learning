@@ -8,12 +8,13 @@ const checkUserAuth = async (req, res, next) => {
     try {
       token = authorization.split(" ")[1];
       const userId = User.verifyToken(token);
-
       if (userId) {
         const user = await User.getUserById(userId);
-
-        if (user) {
-          req.user = user;
+        console.log(user);
+        if (userId) {
+          req.userId = User.userId;
+          console.log(userId, "user id");
+          console.log(req.userId, "req.userId");
           next();
         } else {
           res.status(401).json({ status: "failed", message: "User not found" });

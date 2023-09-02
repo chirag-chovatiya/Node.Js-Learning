@@ -3,14 +3,15 @@ const { comparePassword, hashPassword } = require("../models/userPassword");
 const httpStatus = require("http-status");
 const Joi = require("joi");
 
+
 // REGISTER NEW USER
 const userValidator = (req, res, next) => {
   const schema = Joi.object({
     name: Joi.string().required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(6).max(10).required(),
-    dob: Joi.string().required(),
-    phone: Joi.number().min(10).required(),
+    dob:Joi.string().required(),
+    phone:Joi.number().min(10).required(),
     password_confirmation: Joi.valid(Joi.ref("password")).required(),
     tc: Joi.boolean().required(),
   });
@@ -26,8 +27,7 @@ const userValidator = (req, res, next) => {
 };
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password, dob, phone, password_confirmation, tc } =
-      req.body;
+    const { name, email, password, dob, phone, password_confirmation, tc } = req.body;
     const userExists = await User.getUserByEmail(email);
     if (userExists) {
       return res.status(httpStatus.CONFLICT).json({
@@ -41,16 +41,9 @@ const registerUser = async (req, res) => {
         message: "Password and Confirm Password must match",
       });
     }
-
+  
     const hashedPassword = await hashPassword(password);
-    const savedUser = await User.createUser(
-      name,
-      email,
-      hashedPassword,
-      dob,
-      phone,
-      tc
-    );
+    const savedUser = await User.createUser(name, email, hashedPassword, dob, phone, tc);
     const saved_user = await User.getUserByEmail(email);
     const token = User.generateToken(saved_user);
 
@@ -121,8 +114,10 @@ const loginUser = async (req, res) => {
 };
 
 const loggedUser = async (req, res) => {
-  res.send({ user: req.user });
-};
+  res.send({ "user": req.user })
+}
+;
+
 module.exports = {
   userValidator,
   registerUser,

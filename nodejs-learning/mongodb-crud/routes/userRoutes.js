@@ -2,10 +2,10 @@ const express = require("express");
 const router = express.Router();
 const studentController = require("../controller/userController");
 const loginController = require("../controller/register-login-Controller");
-const carDetail = require("../controller/carSpecification");
+const carDetail = require("../controller/carController");
 const { checkUserAuth } = require("../middleware/authMiddleware");
 
-router.use("/logged", checkUserAuth);
+// router.use("/logged",checkUserAuth)
 
 router.post(
   "/create",
@@ -17,9 +17,9 @@ router.post(
   loginController.loginUserValidator,
   loginController.loginUser
 );
-router.get("/logged", loginController.loggedUser);
+router.get("/logged", checkUserAuth, loginController.loggedUser);
 
-router.post("/carDetails", carDetail.carSpecification);
+router.post("/carDetails", checkUserAuth, carDetail.carSpecification);
 
 router.get("/", studentController.getAllUser);
 router.get("/:userId", studentController.getUserById);

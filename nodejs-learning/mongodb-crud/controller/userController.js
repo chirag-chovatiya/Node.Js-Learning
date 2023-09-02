@@ -20,6 +20,7 @@ const getAllUser = async (req, res) => {
   }
 };
 
+
 // GET USER BYID
 const getUserById = async (req, res) => {
   try {

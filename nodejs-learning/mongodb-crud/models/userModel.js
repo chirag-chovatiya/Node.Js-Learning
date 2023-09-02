@@ -29,46 +29,9 @@ const verifyToken = function (token) {
 };
 
 // CAR SPECIFICATION CREATE
-const carCreate = async function (
-  model,
-  modelName,
-  bodyType,
-  engine,
-  engineType,
-  engineCylinders,
-  manufacturingYear,
-  seatingCapacity,
-  mileage,
-  fuelType,
-  fuelTankCapacity,
-  transmission,
-  kilometer,
-  drivetrain,
-  safety,
-  exShowroomPrice,
-  insurance,
-  onRoadPrice
-) {
-  const newCar = new Car({
-    model,
-    modelName,
-    bodyType,
-    engine,
-    engineType,
-    engineCylinders,
-    manufacturingYear,
-    seatingCapacity,
-    mileage,
-    fuelType,
-    fuelTankCapacity,
-    transmission,
-    kilometer,
-    drivetrain,
-    safety,
-    exShowroomPrice,
-    insurance,
-    onRoadPrice,
-  });
+
+const createCar = async function (userId, carData) {
+  const newCar = new Car({ userId, ...carData });
   return newCar.save();
 };
 
@@ -99,5 +62,5 @@ module.exports = {
   getUserByEmail,
   generateToken,
   verifyToken,
-  carCreate,
+  createCar,
 };
